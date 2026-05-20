@@ -1,0 +1,213 @@
+"use client";
+
+import Image from "next/image";
+import useEmblaCarousel from "embla-carousel-react";
+import Autoplay from "embla-carousel-autoplay";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { FadeIn } from "./motion";
+import { SectionDivider } from "./SectionDivider";
+
+type Photo = {
+  src: string;
+  alt: string;
+  caption: string;
+  subcaption: string;
+};
+
+const photos: Photo[] = [
+  {
+    src: "/fotos/infancia.jpg",
+    alt: "Gabriela y Juan Camilo cuando eran pequeños",
+    caption: "Antes de saber",
+    subcaption: "Cada uno cargando un sueño que aún no se conocía.",
+  },
+  {
+    src: "/fotos/mendoza.jpg",
+    alt: "Gabriela y Juan Camilo en Mendoza, Argentina",
+    caption: "Mendoza · 2022",
+    subcaption: "Nuestro primer viaje juntos cruzando la cordillera.",
+  },
+  {
+    src: "/fotos/viaje-palmeras.jpg",
+    alt: "Gabriela y Juan Camilo entre palmeras",
+    caption: "Viajando juntos",
+    subcaption: "Persiguiendo el verano y los buenos recuerdos.",
+  },
+  {
+    src: "/fotos/gabriela-cantando.jpg",
+    alt: "Gabriela cantando en escenario",
+    caption: "Gabriela en escena",
+    subcaption: "La música nos unió, y nos sigue uniendo.",
+  },
+  {
+    src: "/fotos/juancamilo-guitarra.jpg",
+    alt: "Juan Camilo tocando la guitarra en una banda",
+    caption: "Juan Camilo en escena",
+    subcaption: "Cada acorde es una pequeña promesa.",
+  },
+  {
+    src: "/fotos/pareja-arbol.jpg",
+    alt: "Gabriela y Juan Camilo bajo un árbol",
+    caption: "Hoy",
+    subcaption: "Listos para dar el gran paso.",
+  },
+];
+
+export function Gallery() {
+  const autoplay = useRef(
+    Autoplay({ delay: 4500, stopOnInteraction: false, stopOnMouseEnter: true }),
+  );
+  const [emblaRef, emblaApi] = useEmblaCarousel(
+    {
+      loop: true,
+      align: "center",
+      skipSnaps: false,
+    },
+    [autoplay.current],
+  );
+
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [scrollSnaps, setScrollSnaps] = useState<number[]>([]);
+
+  const onSelect = useCallback(() => {
+    if (!emblaApi) return;
+    setSelectedIndex(emblaApi.selectedScrollSnap());
+  }, [emblaApi]);
+
+  useEffect(() => {
+    if (!emblaApi) return;
+    setScrollSnaps(emblaApi.scrollSnapList());
+    emblaApi.on("select", onSelect);
+    emblaApi.on("reInit", onSelect);
+    onSelect();
+  }, [emblaApi, onSelect]);
+
+  const scrollTo = useCallback(
+    (index: number) => emblaApi && emblaApi.scrollTo(index),
+    [emblaApi],
+  );
+
+  const scrollPrev = useCallback(() => emblaApi && emblaApi.scrollPrev(), [emblaApi]);
+  const scrollNext = useCallback(() => emblaApi && emblaApi.scrollNext(), [emblaApi]);
+
+  return (
+    <section className="bg-cream px-5 py-20 md:py-28">
+      <div className="mx-auto max-w-6xl">
+        <FadeIn className="text-center">
+          <p className="text-xs font-medium uppercase tracking-[0.4em] text-sage-dark">
+            Momentos
+          </p>
+          <SectionDivider variant="leaf" className="mt-3" />
+          <h2 className="mt-2 font-serif text-4xl italic leading-[1.1] text-charcoal md:text-5xl">
+            Antes, durante <span className="font-script not-italic text-sage-dark">y</span> siempre
+          </h2>
+          <p className="mx-auto mt-4 max-w-xl text-charcoal/75 md:text-lg">
+            Pequeños recuerdos que nos llevaron a este día.
+          </p>
+        </FadeIn>
+
+        <FadeIn delay={0.15}>
+          <div className="relative mt-12">
+            <div
+              className="overflow-hidden"
+              ref={emblaRef}
+              aria-roledescription="carousel"
+              aria-label="Galería de momentos de Gabriela y Juan Camilo"
+            >
+              <div className="flex">
+                {photos.map((photo, idx) => (
+                  <div
+                    key={photo.src}
+                    role="group"
+                    aria-roledescription="slide"
+                    aria-label={`${idx + 1} de ${photos.length}`}
+                    className="relative min-w-0 flex-[0_0_85%] px-2 sm:flex-[0_0_70%] md:flex-[0_0_55%] md:px-3 lg:flex-[0_0_45%]"
+                  >
+                    <article className="relative overflow-hidden rounded-3xl bg-charcoal shadow-2xl ring-1 ring-charcoal/10">
+                      <div className="relative aspect-[3/4]">
+                        <Image
+                          src={photo.src}
+                          alt={photo.alt}
+                          fill
+                          sizes="(min-width: 1024px) 45vw, (min-width: 768px) 55vw, 85vw"
+                          className="object-cover"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-charcoal/85 via-charcoal/15 to-transparent" />
+                      </div>
+                      <div className="absolute inset-x-0 bottom-0 px-6 pb-7 pt-12 text-cream md:px-8 md:pb-9">
+                        <p className="font-serif text-2xl italic leading-tight md:text-3xl">
+                          {photo.caption}
+                        </p>
+                        <p className="mt-2 max-w-md text-sm text-cream/85 md:text-base">
+                          {photo.subcaption}
+                        </p>
+                      </div>
+                    </article>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <button
+              type="button"
+              aria-label="Foto anterior"
+              onClick={scrollPrev}
+              className="absolute left-2 top-1/2 -translate-y-1/2 rounded-full border border-charcoal/15 bg-cream/90 p-3 text-charcoal shadow-lg backdrop-blur-sm transition hover:bg-cream md:left-6 md:p-4"
+            >
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <polyline points="15 18 9 12 15 6" />
+              </svg>
+            </button>
+            <button
+              type="button"
+              aria-label="Foto siguiente"
+              onClick={scrollNext}
+              className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full border border-charcoal/15 bg-cream/90 p-3 text-charcoal shadow-lg backdrop-blur-sm transition hover:bg-cream md:right-6 md:p-4"
+            >
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <polyline points="9 18 15 12 9 6" />
+              </svg>
+            </button>
+          </div>
+
+          <div className="mt-6 flex items-center justify-center gap-2">
+            {scrollSnaps.map((_, idx) => (
+              <button
+                key={idx}
+                type="button"
+                aria-label={`Ir a la foto ${idx + 1}`}
+                aria-current={idx === selectedIndex}
+                onClick={() => scrollTo(idx)}
+                className={`h-1.5 rounded-full transition-all duration-300 ${
+                  idx === selectedIndex
+                    ? "w-8 bg-sage-dark"
+                    : "w-1.5 bg-charcoal/25 hover:bg-charcoal/45"
+                }`}
+              />
+            ))}
+          </div>
+        </FadeIn>
+      </div>
+    </section>
+  );
+}

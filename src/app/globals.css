@@ -1,0 +1,155 @@
+@import "tailwindcss";
+
+@theme {
+  --color-cream: #faf7f2;
+  --color-cream-dark: #ebe2cf;
+  --color-paper: #f4ede0;
+
+  --color-sage: #5b6f5a;
+  --color-sage-dark: #3f5040;
+  --color-sage-light: #8fa08e;
+  --color-sage-soft: #d8e0d2;
+  --color-sage-tint: #e6ebe1;
+
+  --color-charcoal: #1f1d1c;
+  --color-charcoal-soft: #2c2a28;
+
+  --color-gold: #b8924f;
+  --color-gold-light: #d4b87a;
+  --color-gold-soft: #f1e3c4;
+
+  --font-serif: var(--font-cormorant);
+  --font-script: var(--font-script);
+  --font-sans: var(--font-lato);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-cream);
+  color: var(--color-charcoal);
+  font-family: var(--font-sans), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.font-serif {
+  font-family: var(--font-serif), Georgia, "Times New Roman", serif;
+  font-feature-settings: "liga", "kern";
+}
+
+.font-script {
+  font-family: var(--font-script), "Lucida Handwriting", cursive;
+  font-weight: 400;
+}
+
+/* Section transitions */
+.section-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+  padding: 0.5rem 0;
+}
+
+.section-divider::before,
+.section-divider::after {
+  content: "";
+  height: 1px;
+  width: 4rem;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--color-gold) 65%, transparent),
+    transparent
+  );
+}
+
+.section-divider svg {
+  width: 28px;
+  height: 28px;
+  color: var(--color-gold);
+  flex: none;
+}
+
+.decorative-line {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--color-gold) 70%, transparent),
+    transparent
+  );
+  height: 1px;
+}
+
+/* Subtle paper texture overlay (very low opacity, doesn't break contrast) */
+.paper-texture {
+  position: relative;
+}
+
+.paper-texture::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.4;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.55  0 0 0 0 0.5  0 0 0 0 0.42  0 0 0 0.05 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
+/* Hero overlay: dark gradient that protects text legibility from bottom */
+.hero-overlay-bottom {
+  background: linear-gradient(
+    180deg,
+    rgba(20, 19, 18, 0) 0%,
+    rgba(20, 19, 18, 0.05) 35%,
+    rgba(20, 19, 18, 0.55) 65%,
+    rgba(20, 19, 18, 0.85) 100%
+  );
+}
+
+.hero-overlay-top {
+  background: linear-gradient(
+    180deg,
+    rgba(20, 19, 18, 0.45) 0%,
+    rgba(20, 19, 18, 0.1) 50%,
+    transparent 100%
+  );
+}
+
+/* Card with elevation suitable for content blocks */
+.card-elevated {
+  background: var(--color-cream);
+  border: 1px solid color-mix(in srgb, var(--color-sage) 18%, transparent);
+  border-radius: 1.25rem;
+  box-shadow:
+    0 1px 2px rgba(31, 29, 28, 0.04),
+    0 8px 30px -16px rgba(31, 29, 28, 0.18);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card-elevated:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 1px 2px rgba(31, 29, 28, 0.05),
+    0 16px 40px -16px rgba(31, 29, 28, 0.22);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Focus visible for accessibility */
+:focus-visible {
+  outline: 2px solid var(--color-sage);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
