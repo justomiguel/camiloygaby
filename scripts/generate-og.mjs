@@ -20,6 +20,9 @@ const cormorantLight = readFileSync(
 const greatVibes = readFileSync(resolve(FONT_DIR, "GreatVibes-Regular.ttf")).toString(
   "base64",
 );
+const italianno = readFileSync(resolve(FONT_DIR, "Italianno-Regular.ttf")).toString(
+  "base64",
+);
 
 const overlay = `<?xml version="1.0" encoding="UTF-8"?>
 <svg width="${WIDTH}" height="${HEIGHT}" xmlns="http://www.w3.org/2000/svg">
@@ -43,8 +46,14 @@ const overlay = `<?xml version="1.0" encoding="UTF-8"?>
         font-style: normal;
         font-weight: 400;
       }
+      @font-face {
+        font-family: 'Italianno';
+        src: url(data:font/ttf;base64,${italianno}) format('truetype');
+        font-style: normal;
+        font-weight: 400;
+      }
       .label { font-family: 'Cormorant Light', serif; fill: #d4b87a; letter-spacing: 14px; }
-      .names { font-family: 'Cormorant Italic', serif; fill: #faf7f2; }
+      .names { font-family: 'Italianno', cursive; fill: #faf7f2; }
       .amp { font-family: 'Great Vibes', cursive; fill: #d4b87a; }
       .accent { font-family: 'Cormorant Italic', serif; fill: #faf7f2; opacity: 0.95; }
       .venue { font-family: 'Cormorant Light', serif; fill: #faf7f2; opacity: 0.78; letter-spacing: 6px; }
@@ -57,14 +66,14 @@ const overlay = `<?xml version="1.0" encoding="UTF-8"?>
   </defs>
   <rect width="100%" height="100%" fill="url(#g)"/>
   <g text-anchor="middle">
-    <text class="label" x="${WIDTH / 2}" y="375" font-size="30">19 · DICIEMBRE · 2026</text>
-    <text class="names" x="${WIDTH / 2}" y="492" font-size="106">
+    <text class="label" x="${WIDTH / 2}" y="320" font-size="28">19 · DICIEMBRE · 2026</text>
+    <text class="names" x="${WIDTH / 2}" y="475" font-size="160">
       <tspan>Gabriela </tspan>
-      <tspan class="amp" font-size="120">&amp;</tspan>
-      <tspan> Juan Camilo</tspan>
+      <tspan class="amp" font-size="115" dy="-12">&amp;</tspan>
+      <tspan dy="12"> Juan Camilo</tspan>
     </text>
-    <text class="accent" x="${WIDTH / 2}" y="552" font-size="34" font-style="italic">¡Nos casamos!</text>
-    <text class="venue" x="${WIDTH / 2}" y="600" font-size="18">ROUTE G25 · SAN JOSE DE MAIPO</text>
+    <text class="accent" x="${WIDTH / 2}" y="535" font-size="32" font-style="italic">¡Nos casamos!</text>
+    <text class="venue" x="${WIDTH / 2}" y="595" font-size="18">ROUTE G25 · SAN JOSE DE MAIPO</text>
   </g>
 </svg>
 `;

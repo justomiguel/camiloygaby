@@ -3,7 +3,7 @@
 import Image from "next/image";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { FadeIn } from "./motion";
 import { SectionDivider } from "./SectionDivider";
 
@@ -54,8 +54,9 @@ const photos: Photo[] = [
 ];
 
 export function Gallery() {
-  const autoplay = useRef(
-    Autoplay({ delay: 4500, stopOnInteraction: false, stopOnMouseEnter: true }),
+  const autoplay = useMemo(
+    () => Autoplay({ delay: 4500, stopOnInteraction: false, stopOnMouseEnter: true }),
+    [],
   );
   const [emblaRef, emblaApi] = useEmblaCarousel(
     {
@@ -63,11 +64,12 @@ export function Gallery() {
       align: "center",
       skipSnaps: false,
     },
-    [autoplay.current],
+    [autoplay],
   );
 
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [scrollSnaps, setScrollSnaps] = useState<number[]>([]);
+  const [isPlaying, setIsPlaying] = useState(true);
 
   const onSelect = useCallback(() => {
     if (!emblaApi) return;
@@ -76,10 +78,20 @@ export function Gallery() {
 
   useEffect(() => {
     if (!emblaApi) return;
-    setScrollSnaps(emblaApi.scrollSnapList());
+
+    const timeoutId = window.setTimeout(() => {
+      setScrollSnaps(emblaApi.scrollSnapList());
+      onSelect();
+    }, 0);
+
     emblaApi.on("select", onSelect);
     emblaApi.on("reInit", onSelect);
-    onSelect();
+
+    return () => {
+      window.clearTimeout(timeoutId);
+      emblaApi.off("select", onSelect);
+      emblaApi.off("reInit", onSelect);
+    };
   }, [emblaApi, onSelect]);
 
   const scrollTo = useCallback(
@@ -89,6 +101,15 @@ export function Gallery() {
 
   const scrollPrev = useCallback(() => emblaApi && emblaApi.scrollPrev(), [emblaApi]);
   const scrollNext = useCallback(() => emblaApi && emblaApi.scrollNext(), [emblaApi]);
+  const toggleAutoplay = useCallback(() => {
+    if (autoplay.isPlaying()) {
+      autoplay.stop();
+      setIsPlaying(false);
+    } else {
+      autoplay.play();
+      setIsPlaying(true);
+    }
+  }, [autoplay]);
 
   return (
     <section className="bg-cream px-5 py-20 md:py-28">
@@ -103,6 +124,9 @@ export function Gallery() {
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-charcoal/75 md:text-lg">
             Pequeños recuerdos que nos llevaron a este día.
+          </p>
+          <p className="sr-only" aria-live="polite">
+            Foto {selectedIndex + 1} de {photos.length}: {photos[selectedIndex]?.caption}
           </p>
         </FadeIn>
 
@@ -190,21 +214,32 @@ export function Gallery() {
             </button>
           </div>
 
-          <div className="mt-6 flex items-center justify-center gap-2">
-            {scrollSnaps.map((_, idx) => (
-              <button
-                key={idx}
-                type="button"
-                aria-label={`Ir a la foto ${idx + 1}`}
-                aria-current={idx === selectedIndex}
-                onClick={() => scrollTo(idx)}
-                className={`h-1.5 rounded-full transition-all duration-300 ${
-                  idx === selectedIndex
-                    ? "w-8 bg-sage-dark"
-                    : "w-1.5 bg-charcoal/25 hover:bg-charcoal/45"
-                }`}
-              />
-            ))}
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+            <button
+              type="button"
+              onClick={toggleAutoplay}
+              aria-label={isPlaying ? "Pausar carrusel de fotos" : "Reanudar carrusel de fotos"}
+              aria-pressed={!isPlaying}
+              className="rounded-full border border-sage/25 bg-cream px-4 py-2 text-xs font-medium uppercase tracking-[0.22em] text-sage-dark transition hover:border-sage hover:bg-sage/10"
+            >
+              {isPlaying ? "Pausar" : "Reanudar"}
+            </button>
+            <div className="flex items-center justify-center gap-2" aria-label="Selector de fotos">
+              {scrollSnaps.map((_, idx) => (
+                <button
+                  key={idx}
+                  type="button"
+                  aria-label={`Ir a la foto ${idx + 1}`}
+                  aria-current={idx === selectedIndex}
+                  onClick={() => scrollTo(idx)}
+                  className={`h-1.5 rounded-full transition-all duration-300 ${
+                    idx === selectedIndex
+                      ? "w-8 bg-sage-dark"
+                      : "w-1.5 bg-charcoal/25 hover:bg-charcoal/45"
+                  }`}
+                />
+              ))}
+            </div>
           </div>
         </FadeIn>
       </div>

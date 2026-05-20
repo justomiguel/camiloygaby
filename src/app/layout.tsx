@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
-import { Cormorant_Garamond, Great_Vibes, Lato } from "next/font/google";
+import { Cormorant_Garamond, Lato } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 
 const cormorant = Cormorant_Garamond({
@@ -10,10 +11,9 @@ const cormorant = Cormorant_Garamond({
   display: "swap",
 });
 
-const greatVibes = Great_Vibes({
-  subsets: ["latin"],
-  weight: "400",
-  variable: "--font-script",
+const wedding = localFont({
+  src: "../../public/og-fonts/Wedding.otf",
+  variable: "--font-wedding",
   display: "swap",
 });
 
@@ -81,11 +81,10 @@ export const metadata: Metadata = {
     description: DESCRIPTION,
     images: [
       {
-        url: "/og-image.jpg",
+        url: "/opengraph-image",
         width: 1200,
         height: 630,
-        alt: "Gabriela y Juan Camilo — 19 de diciembre 2026",
-        type: "image/jpeg",
+        alt: "Gabriela y Juan Camilo — Nos casamos",
       },
     ],
   },
@@ -93,7 +92,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: TITLE,
     description: DESCRIPTION,
-    images: ["/og-image.jpg"],
+    images: ["/opengraph-image"],
   },
   robots: {
     index: true,
@@ -116,7 +115,7 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body
-        className={`${cormorant.variable} ${greatVibes.variable} ${lato.variable} antialiased`}
+        className={`${cormorant.variable} ${wedding.variable} ${lato.variable} antialiased`}
       >
         {children}
       </body>

@@ -27,9 +27,14 @@ export function Countdown() {
   const [parts, setParts] = useState<Parts | null>(null);
 
   useEffect(() => {
-    setParts(diff());
-    const id = setInterval(() => setParts(diff()), 1000);
-    return () => clearInterval(id);
+    const update = () => setParts(diff());
+    const timeoutId = window.setTimeout(update, 0);
+    const intervalId = window.setInterval(update, 1000);
+
+    return () => {
+      window.clearTimeout(timeoutId);
+      window.clearInterval(intervalId);
+    };
   }, []);
 
   return (

@@ -53,15 +53,15 @@ export function Hero() {
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.65, duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
-          className="mt-5 font-serif italic text-cream drop-shadow-[0_2px_14px_rgba(0,0,0,0.5)]"
+          className="mt-3 font-display text-cream drop-shadow-[0_2px_18px_rgba(0,0,0,0.55)]"
         >
-          <span className="block text-[14vw] font-normal leading-[1] sm:text-7xl md:text-[6.5rem] lg:text-[8rem]">
+          <span className="block text-[26vw] leading-[0.9] sm:text-[8rem] md:text-[11rem] lg:text-[14rem]">
             Gabriela
           </span>
-          <span className="my-2 block font-script text-[20vw] not-italic leading-none text-gold-light drop-shadow-[0_3px_10px_rgba(0,0,0,0.4)] sm:text-[5.5rem] md:text-[8rem] lg:text-[10rem]">
+          <span className="-mt-3 block font-script text-[16vw] leading-[0.9] text-gold-light drop-shadow-[0_3px_12px_rgba(0,0,0,0.45)] sm:text-[5rem] md:text-[7rem] lg:text-[9rem] md:-mt-6">
             &amp;
           </span>
-          <span className="block text-[14vw] font-normal leading-[1] sm:text-7xl md:text-[6.5rem] lg:text-[8rem]">
+          <span className="-mt-2 block text-[26vw] leading-[0.9] sm:text-[8rem] md:text-[11rem] lg:text-[14rem]">
             Juan Camilo
           </span>
         </motion.h1>

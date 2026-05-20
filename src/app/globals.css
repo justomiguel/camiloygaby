@@ -19,7 +19,8 @@
   --color-gold-soft: #f1e3c4;
 
   --font-serif: var(--font-cormorant);
-  --font-script: var(--font-script);
+  --font-script: var(--font-wedding);
+  --font-display: var(--font-wedding);
   --font-sans: var(--font-lato);
 }
 
@@ -40,7 +41,12 @@ body {
 }
 
 .font-script {
-  font-family: var(--font-script), "Lucida Handwriting", cursive;
+  font-family: var(--font-script), "Brush Script MT", cursive;
+  font-weight: 400;
+}
+
+.font-display {
+  font-family: var(--font-display), "Brush Script MT", "Great Vibes", cursive;
   font-weight: 400;
 }
 
