@@ -1,4 +1,4 @@
-import { readFileSync } from "fs";
+import { readFileSync, readdirSync } from "fs";
 import { resolve } from "path";
 import pg from "pg";
 
@@ -29,16 +29,22 @@ async function main() {
     throw new Error("DATABASE_URL no está definida");
   }
 
-  const sql = readFileSync(
-    resolve(process.cwd(), "supabase/migrations/001_rsvps.sql"),
-    "utf8",
-  );
+  const migrationsDir = resolve(process.cwd(), "supabase/migrations");
+  const files = readdirSync(migrationsDir)
+    .filter((file) => file.endsWith(".sql"))
+    .sort();
 
   const client = new Client({ connectionString, ssl: { rejectUnauthorized: false } });
   await client.connect();
-  await client.query(sql);
+
+  for (const file of files) {
+    const sql = readFileSync(resolve(migrationsDir, file), "utf8");
+    await client.query(sql);
+    console.log(`Migración aplicada: ${file}`);
+  }
+
   await client.end();
-  console.log("Migración aplicada correctamente.");
+  console.log("Todas las migraciones aplicadas correctamente.");
 }
 
 main().catch((error) => {

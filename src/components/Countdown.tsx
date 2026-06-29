@@ -1,20 +1,12 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import type { SiteContent } from "@/lib/content/types";
 
-const WEDDING_DATE = new Date("2026-12-19T19:00:00-03:00").getTime();
+type CountdownContent = SiteContent["countdown"];
 
 type Parts = { days: number; hours: number; minutes: number; seconds: number };
-
-function diff(): Parts {
-  const distance = Math.max(0, WEDDING_DATE - Date.now());
-  const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-  const hours = Math.floor((distance / (1000 * 60 * 60)) % 24);
-  const minutes = Math.floor((distance / (1000 * 60)) % 60);
-  const seconds = Math.floor((distance / 1000) % 60);
-  return { days, hours, minutes, seconds };
-}
 
 const labels: Array<[keyof Parts, string]> = [
   ["days", "días"],
@@ -23,11 +15,24 @@ const labels: Array<[keyof Parts, string]> = [
   ["seconds", "seg"],
 ];
 
-export function Countdown() {
+export function Countdown({ content }: { content: CountdownContent }) {
+  const weddingDate = useMemo(
+    () => new Date(content.weddingDateIso).getTime(),
+    [content.weddingDateIso],
+  );
+
   const [parts, setParts] = useState<Parts | null>(null);
 
   useEffect(() => {
-    const update = () => setParts(diff());
+    const update = () => {
+      const distance = Math.max(0, weddingDate - Date.now());
+      setParts({
+        days: Math.floor(distance / (1000 * 60 * 60 * 24)),
+        hours: Math.floor((distance / (1000 * 60 * 60)) % 24),
+        minutes: Math.floor((distance / (1000 * 60)) % 60),
+        seconds: Math.floor((distance / 1000) % 60),
+      });
+    };
     const timeoutId = window.setTimeout(update, 0);
     const intervalId = window.setInterval(update, 1000);
 
@@ -35,7 +40,7 @@ export function Countdown() {
       window.clearTimeout(timeoutId);
       window.clearInterval(intervalId);
     };
-  }, []);
+  }, [weddingDate]);
 
   return (
     <section
@@ -48,7 +53,7 @@ export function Countdown() {
 
       <div className="relative mx-auto max-w-4xl text-center">
         <p className="text-[10px] font-medium uppercase tracking-[0.45em] text-gold-light/90 md:text-xs">
-          Cuenta regresiva
+          {content.label}
         </p>
         <div className="mx-auto mt-2 h-px w-12 bg-gold-light/40" aria-hidden="true" />
         <div className="mt-5 grid grid-cols-4 gap-2 md:gap-6">

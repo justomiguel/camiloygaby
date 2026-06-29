@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
-import { Cormorant_Garamond, Lato } from "next/font/google";
-import localFont from "next/font/local";
+import { Cormorant_Garamond, Great_Vibes, Lato } from "next/font/google";
 import "./globals.css";
+import { SmoothScroll } from "@/components/SmoothScroll";
 
 const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
@@ -11,9 +11,10 @@ const cormorant = Cormorant_Garamond({
   display: "swap",
 });
 
-const wedding = localFont({
-  src: "../../public/og-fonts/Wedding.otf",
-  variable: "--font-wedding",
+const greatVibes = Great_Vibes({
+  subsets: ["latin"],
+  weight: "400",
+  variable: "--font-great-vibes",
   display: "swap",
 });
 
@@ -113,10 +114,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es">
-      <body
-        className={`${cormorant.variable} ${wedding.variable} ${lato.variable} antialiased`}
-      >
+    <html
+      lang="es"
+      className={`${cormorant.variable} ${greatVibes.variable} ${lato.variable}`}
+      suppressHydrationWarning
+    >
+      <body className="antialiased">
+        <SmoothScroll />
         {children}
       </body>
     </html>

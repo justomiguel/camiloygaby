@@ -2,19 +2,16 @@
 
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useEffect, useState } from "react";
+import type { SiteContent } from "@/lib/content/types";
 
-const links = [
-  { href: "#historia", label: "Nosotros" },
-  { href: "#musica", label: "Música" },
-  { href: "#lugar", label: "Lugar" },
-  { href: "#confirmacion", label: "Confirmar" },
-];
+type HeaderContent = SiteContent["header"];
 
-export function Header() {
+export function Header({ content }: { content: HeaderContent }) {
   const { scrollYProgress } = useScroll();
   const progressWidth = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const [activeHref, setActiveHref] = useState<string | null>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60);
@@ -22,6 +19,30 @@ export function Header() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  useEffect(() => {
+    const targets = content.links
+      .map((link) => link.href)
+      .filter((href) => href.startsWith("#"))
+      .map((href) => document.querySelector<HTMLElement>(href))
+      .filter((el): el is HTMLElement => el !== null);
+
+    if (targets.length === 0) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveHref(`#${entry.target.id}`);
+          }
+        });
+      },
+      { rootMargin: "-45% 0px -50% 0px", threshold: 0 },
+    );
+
+    targets.forEach((target) => observer.observe(target));
+    return () => observer.disconnect();
+  }, [content.links]);
 
   return (
     <header
@@ -41,24 +62,40 @@ export function Header() {
             scrolled ? "text-charcoal" : "text-cream drop-shadow"
           }`}
         >
-          G <span className="font-script text-2xl text-gold">&amp;</span> JC
+          {content.logoLeft}{" "}
+          <span className="font-script text-2xl text-gold">&amp;</span>{" "}
+          {content.logoRight}
         </a>
 
         <ul className="hidden gap-7 text-sm md:flex">
-          {links.map((link) => (
-            <li key={link.href}>
-              <a
-                href={link.href}
-                className={`transition ${
-                  scrolled
-                    ? "text-charcoal/80 hover:text-sage-dark"
-                    : "text-cream/95 hover:text-cream drop-shadow"
-                }`}
-              >
-                {link.label}
-              </a>
-            </li>
-          ))}
+          {content.links.map((link) => {
+            const active = activeHref === link.href;
+            return (
+              <li key={link.href}>
+                <a
+                  href={link.href}
+                  aria-current={active ? "true" : undefined}
+                  className={`group relative transition ${
+                    scrolled
+                      ? active
+                        ? "text-sage-dark"
+                        : "text-charcoal/80 hover:text-sage-dark"
+                      : active
+                        ? "text-cream drop-shadow"
+                        : "text-cream/95 hover:text-cream drop-shadow"
+                  }`}
+                >
+                  {link.label}
+                  <span
+                    className={`absolute -bottom-1.5 left-0 h-px bg-gold transition-all duration-300 ${
+                      active ? "w-full" : "w-0 group-hover:w-full"
+                    }`}
+                    aria-hidden="true"
+                  />
+                </a>
+              </li>
+            );
+          })}
         </ul>
 
         <button
@@ -89,24 +126,36 @@ export function Header() {
 
       <motion.div
         style={{ width: progressWidth }}
-        className="h-px origin-left bg-gold/70"
+        className="h-0.5 origin-left bg-gradient-to-r from-gold/40 via-gold to-gold-light"
         aria-hidden="true"
       />
 
       {open && (
         <div className="border-t border-sage/15 bg-cream/95 backdrop-blur-md md:hidden">
           <ul className="flex flex-col gap-1 px-5 py-3">
-            {links.map((link) => (
-              <li key={link.href}>
-                <a
-                  href={link.href}
-                  onClick={() => setOpen(false)}
-                  className="block rounded-lg px-3 py-2.5 text-charcoal/80 transition hover:bg-sage/10 hover:text-sage-dark"
-                >
-                  {link.label}
-                </a>
-              </li>
-            ))}
+            {content.links.map((link) => {
+              const active = activeHref === link.href;
+              return (
+                <li key={link.href}>
+                  <a
+                    href={link.href}
+                    onClick={() => setOpen(false)}
+                    aria-current={active ? "true" : undefined}
+                    className={`flex items-center gap-2 rounded-lg px-3 py-2.5 transition hover:bg-sage/10 hover:text-sage-dark ${
+                      active ? "bg-sage/10 text-sage-dark" : "text-charcoal/80"
+                    }`}
+                  >
+                    <span
+                      className={`h-1.5 w-1.5 rounded-full bg-gold transition-opacity ${
+                        active ? "opacity-100" : "opacity-0"
+                      }`}
+                      aria-hidden="true"
+                    />
+                    {link.label}
+                  </a>
+                </li>
+              );
+            })}
           </ul>
         </div>
       )}

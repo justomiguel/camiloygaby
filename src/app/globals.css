@@ -19,13 +19,38 @@
   --color-gold-soft: #f1e3c4;
 
   --font-serif: var(--font-cormorant);
-  --font-script: var(--font-wedding);
-  --font-display: var(--font-wedding);
+  --font-script: var(--font-great-vibes);
+  --font-display: var(--font-great-vibes);
   --font-sans: var(--font-lato);
 }
 
 html {
   scroll-behavior: smooth;
+}
+
+/* Lenis smooth scroll */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: clip;
+}
+
+/* Bloqueo de scroll mientras se reproduce la intro */
+html.intro-lock,
+html.intro-lock body {
+  overflow: hidden;
+  height: 100%;
 }
 
 body {
@@ -142,6 +167,226 @@ body {
     0 16px 40px -16px rgba(31, 29, 28, 0.22);
 }
 
+/* ─── Libro de deseos ─── */
+
+.guestbook-section {
+  position: relative;
+  background:
+    radial-gradient(ellipse 70% 50% at 15% 0%, color-mix(in srgb, var(--color-sage) 12%, transparent), transparent),
+    radial-gradient(ellipse 60% 45% at 90% 100%, color-mix(in srgb, var(--color-gold) 12%, transparent), transparent),
+    linear-gradient(170deg, var(--color-cream) 0%, var(--color-sage-tint) 55%, var(--color-paper) 100%);
+}
+
+/* Sello de cera con monograma sobre el encabezado */
+.guestbook-seal {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 4.25rem;
+  height: 4.25rem;
+  border-radius: 9999px;
+  color: var(--color-cream);
+  background:
+    radial-gradient(circle at 32% 28%, var(--color-gold-light), var(--color-gold) 55%, var(--color-sage-dark) 130%);
+  box-shadow:
+    inset 0 2px 3px rgba(255, 255, 255, 0.4),
+    inset 0 -4px 8px rgba(31, 29, 28, 0.35),
+    0 10px 22px -12px rgba(31, 29, 28, 0.6);
+}
+
+.guestbook-seal::before {
+  content: "";
+  position: absolute;
+  inset: 6px;
+  border-radius: 9999px;
+  border: 1px dashed color-mix(in srgb, var(--color-cream) 55%, transparent);
+}
+
+.guestbook-seal span {
+  font-family: var(--font-script), "Brush Script MT", cursive;
+  font-size: 1.85rem;
+  line-height: 1;
+  text-shadow: 0 1px 2px rgba(31, 29, 28, 0.35);
+}
+
+/* Tarjeta de papelería fina para el formulario */
+.guestbook-card {
+  position: relative;
+  border-radius: 1.35rem;
+  background:
+    linear-gradient(168deg, #fffdf8 0%, var(--color-cream) 55%, var(--color-paper) 100%);
+  border: 1px solid color-mix(in srgb, var(--color-gold) 28%, transparent);
+  box-shadow:
+    0 1px 2px rgba(31, 29, 28, 0.05),
+    0 24px 56px -28px rgba(31, 29, 28, 0.4);
+}
+
+/* Doble filete dorado interior */
+.guestbook-card::before {
+  content: "";
+  position: absolute;
+  inset: 0.625rem;
+  border-radius: 1rem;
+  border: 1px solid color-mix(in srgb, var(--color-gold) 36%, transparent);
+  pointer-events: none;
+}
+
+.guestbook-field {
+  width: 100%;
+  border-radius: 0.85rem;
+  border: 1px solid color-mix(in srgb, var(--color-sage) 22%, transparent);
+  background: color-mix(in srgb, #ffffff 70%, var(--color-cream));
+  padding: 0.8rem 1rem;
+  color: var(--color-charcoal);
+  outline: none;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+}
+
+.guestbook-field::placeholder {
+  color: color-mix(in srgb, var(--color-charcoal) 38%, transparent);
+}
+
+.guestbook-field:focus {
+  border-color: var(--color-gold);
+  background: #fffdf8;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-gold) 22%, transparent);
+}
+
+/* Botón dorado con brillo sutil */
+.guestbook-submit {
+  position: relative;
+  overflow: hidden;
+  border-radius: 9999px;
+  color: var(--color-cream);
+  background: linear-gradient(120deg, var(--color-gold) 0%, var(--color-gold-light) 50%, var(--color-gold) 100%);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.45),
+    0 10px 24px -12px rgba(184, 146, 79, 0.85);
+  transition: transform 0.2s ease, box-shadow 0.25s ease, filter 0.25s ease;
+}
+
+.guestbook-submit:hover:not(:disabled) {
+  transform: translateY(-1px);
+  filter: brightness(1.04);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.5),
+    0 14px 30px -12px rgba(184, 146, 79, 0.95);
+}
+
+.guestbook-submit::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -120%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(
+    100deg,
+    transparent,
+    rgba(255, 255, 255, 0.5),
+    transparent
+  );
+  transform: skewX(-18deg);
+}
+
+.guestbook-submit:hover:not(:disabled)::after {
+  animation: guestbook-shimmer 0.9s ease;
+}
+
+@keyframes guestbook-shimmer {
+  to {
+    left: 130%;
+  }
+}
+
+.guestbook-wall {
+  max-width: 64rem;
+  margin: 0 auto;
+}
+
+.guestbook-note {
+  position: relative;
+  border-radius: 0.75rem 0.75rem 0.85rem 0.7rem;
+  padding: 1.75rem 1.5rem 1.5rem;
+  box-shadow:
+    0 1px 1px rgba(31, 29, 28, 0.05),
+    0 18px 36px -22px rgba(31, 29, 28, 0.4);
+  transition: box-shadow 0.3s ease;
+  will-change: transform;
+}
+
+/* Comilla ornamental de apertura */
+.guestbook-note__quote {
+  position: absolute;
+  top: 0.35rem;
+  left: 0.85rem;
+  font-family: var(--font-serif), Georgia, serif;
+  font-size: 3.25rem;
+  line-height: 1;
+  font-style: italic;
+  color: color-mix(in srgb, var(--color-gold) 38%, transparent);
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Filete dorado bajo la firma */
+.guestbook-note__rule {
+  height: 1px;
+  width: 2.25rem;
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--color-gold) 70%, transparent),
+    transparent
+  );
+}
+
+.guestbook-note:hover {
+  box-shadow:
+    0 2px 4px rgba(31, 29, 28, 0.06),
+    0 26px 48px -22px rgba(31, 29, 28, 0.5);
+}
+
+/* Cinta washi translúcida en lugar del alfiler */
+.guestbook-note__pin {
+  position: absolute;
+  top: -9px;
+  left: 50%;
+  width: 56px;
+  height: 18px;
+  transform: translateX(-50%) rotate(-1.5deg);
+  border-radius: 2px;
+  background: linear-gradient(
+    120deg,
+    color-mix(in srgb, var(--color-gold-light) 70%, transparent),
+    color-mix(in srgb, var(--color-gold) 55%, transparent)
+  );
+  border-left: 1px dashed color-mix(in srgb, var(--color-cream) 60%, transparent);
+  border-right: 1px dashed color-mix(in srgb, var(--color-cream) 60%, transparent);
+  box-shadow: 0 2px 5px -2px rgba(31, 29, 28, 0.35);
+  backdrop-filter: blur(1px);
+}
+
+.guestbook-note--cream {
+  background: linear-gradient(160deg, #fffdf8, var(--color-cream));
+  border: 1px solid color-mix(in srgb, var(--color-sage) 14%, transparent);
+}
+
+.guestbook-note--paper {
+  background: linear-gradient(160deg, #fbf4e6, var(--color-paper));
+  border: 1px solid color-mix(in srgb, var(--color-gold) 22%, transparent);
+}
+
+.guestbook-note--sage {
+  background: linear-gradient(160deg, #eef2ea, var(--color-sage-tint));
+  border: 1px solid color-mix(in srgb, var(--color-sage) 24%, transparent);
+}
+
+.guestbook-note--gold {
+  background: linear-gradient(160deg, #fbf1d8, var(--color-gold-soft));
+  border: 1px solid color-mix(in srgb, var(--color-gold) 30%, transparent);
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -158,4 +403,301 @@ body {
   outline: 2px solid var(--color-sage);
   outline-offset: 3px;
   border-radius: 4px;
+}
+
+/* ─── Admin panel design system ─── */
+
+.admin-bg {
+  min-height: 100vh;
+  background:
+    radial-gradient(ellipse 80% 60% at 10% 0%, color-mix(in srgb, var(--color-gold) 8%, transparent), transparent),
+    radial-gradient(ellipse 70% 50% at 90% 100%, color-mix(in srgb, var(--color-sage) 12%, transparent), transparent),
+    linear-gradient(165deg, var(--color-cream) 0%, var(--color-sage-tint) 45%, var(--color-paper) 100%);
+}
+
+.admin-login-bg {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 20% 80%, color-mix(in srgb, var(--color-sage) 25%, transparent), transparent 50%),
+    radial-gradient(circle at 80% 20%, color-mix(in srgb, var(--color-gold) 15%, transparent), transparent 45%),
+    linear-gradient(145deg, var(--color-charcoal-soft) 0%, var(--color-sage-dark) 55%, var(--color-charcoal) 100%);
+}
+
+.admin-card {
+  background: color-mix(in srgb, var(--color-cream) 92%, white);
+  border: 1px solid color-mix(in srgb, var(--color-sage) 14%, transparent);
+  border-radius: 1.25rem;
+  box-shadow:
+    0 1px 2px rgba(31, 29, 28, 0.03),
+    0 12px 40px -20px rgba(31, 29, 28, 0.12);
+}
+
+.admin-card-inset {
+  background: white;
+  border: 1px solid color-mix(in srgb, var(--color-sage) 12%, transparent);
+  border-radius: 0.875rem;
+}
+
+.admin-input {
+  margin-top: 0.375rem;
+  width: 100%;
+  border-radius: 0.75rem;
+  border: 1px solid color-mix(in srgb, var(--color-sage) 22%, transparent);
+  background: white;
+  padding: 0.625rem 0.875rem;
+  font-size: 0.875rem;
+  color: var(--color-charcoal);
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.admin-input:focus {
+  border-color: var(--color-sage);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-sage) 18%, transparent);
+}
+
+.admin-label {
+  display: block;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: color-mix(in srgb, var(--color-charcoal) 75%, transparent);
+}
+
+.admin-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 9999px;
+  padding: 0.625rem 1.25rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.15s, opacity 0.2s;
+}
+
+.admin-btn:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.admin-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.admin-btn-primary {
+  background: var(--color-sage-dark);
+  color: var(--color-cream);
+}
+
+.admin-btn-primary:hover:not(:disabled) {
+  background: var(--color-charcoal);
+}
+
+.admin-btn-secondary {
+  border: 1px solid color-mix(in srgb, var(--color-sage) 35%, transparent);
+  background: transparent;
+  color: var(--color-sage-dark);
+}
+
+.admin-btn-secondary:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--color-sage) 10%, transparent);
+}
+
+.admin-btn-ghost {
+  border: 1px solid color-mix(in srgb, var(--color-charcoal) 12%, transparent);
+  background: transparent;
+  color: color-mix(in srgb, var(--color-charcoal) 70%, transparent);
+}
+
+.admin-btn-ghost:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--color-charcoal) 5%, transparent);
+}
+
+.admin-btn-danger {
+  border: 1px solid color-mix(in srgb, #c53030 30%, transparent);
+  background: transparent;
+  color: #9b2c2c;
+}
+
+.admin-btn-danger:hover:not(:disabled) {
+  background: #fef2f2;
+}
+
+.admin-stat {
+  position: relative;
+  overflow: hidden;
+  border-radius: 1.25rem;
+  padding: 1.25rem 1.375rem;
+  background: white;
+  border: 1px solid color-mix(in srgb, var(--color-sage) 12%, transparent);
+  box-shadow: 0 8px 30px -18px rgba(31, 29, 28, 0.15);
+}
+
+.admin-stat::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 4rem;
+  height: 4rem;
+  border-radius: 0 1.25rem 0 100%;
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--color-gold) 12%, transparent),
+    transparent
+  );
+  pointer-events: none;
+}
+
+.admin-section-title {
+  font-family: var(--font-serif), Georgia, serif;
+  font-size: 1.25rem;
+  font-style: italic;
+  color: var(--color-charcoal);
+  letter-spacing: 0.01em;
+}
+
+.admin-table th {
+  padding-bottom: 0.75rem;
+  padding-right: 1rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--color-charcoal) 45%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--color-sage) 18%, transparent);
+}
+
+.admin-table td {
+  padding: 0.875rem 1rem 0.875rem 0;
+  font-size: 0.875rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--color-sage) 8%, transparent);
+}
+
+.admin-table tbody tr:hover td {
+  background: color-mix(in srgb, var(--color-sage) 4%, transparent);
+}
+
+.admin-nav-active {
+  background: color-mix(in srgb, var(--color-cream) 12%, transparent);
+  color: var(--color-cream);
+  box-shadow: inset 3px 0 0 var(--color-gold);
+}
+
+.admin-nav-item {
+  color: color-mix(in srgb, var(--color-cream) 72%, transparent);
+  transition: background 0.2s, color 0.2s;
+}
+
+.admin-nav-item:hover {
+  background: color-mix(in srgb, white 8%, transparent);
+  color: var(--color-cream);
+}
+
+.admin-pill-active {
+  background: var(--color-sage-dark);
+  color: var(--color-cream);
+  box-shadow: 0 2px 8px -2px rgba(63, 80, 64, 0.4);
+}
+
+.admin-pill {
+  background: white;
+  color: color-mix(in srgb, var(--color-charcoal) 80%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-sage) 15%, transparent);
+}
+
+.admin-pill:hover {
+  background: color-mix(in srgb, var(--color-sage) 8%, white);
+}
+
+.admin-alert-success {
+  border-radius: 0.875rem;
+  background: color-mix(in srgb, #38a169 8%, white);
+  border: 1px solid color-mix(in srgb, #38a169 25%, transparent);
+  color: #276749;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+}
+
+.admin-alert-error {
+  border-radius: 0.875rem;
+  background: color-mix(in srgb, #e53e3e 6%, white);
+  border: 1px solid color-mix(in srgb, #e53e3e 22%, transparent);
+  color: #9b2c2c;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+}
+
+.admin-section-link {
+  color: color-mix(in srgb, var(--color-charcoal) 68%, transparent);
+}
+
+.admin-section-link:hover {
+  background: color-mix(in srgb, var(--color-sage) 8%, transparent);
+  color: var(--color-charcoal);
+}
+
+.admin-section-link-active {
+  background: var(--color-sage-tint);
+  color: var(--color-sage-dark);
+  font-weight: 600;
+  box-shadow: inset 3px 0 0 var(--color-gold);
+}
+
+.admin-section-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 1.375rem;
+  width: 1.375rem;
+  flex-shrink: 0;
+  border-radius: 0.5rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  background: color-mix(in srgb, var(--color-sage) 12%, transparent);
+  color: var(--color-sage-dark);
+}
+
+.admin-section-link-active .admin-section-num {
+  background: color-mix(in srgb, var(--color-gold) 22%, transparent);
+  color: var(--color-charcoal);
+}
+
+.admin-page-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2rem;
+  height: 2rem;
+  padding: 0 0.5rem;
+  border-radius: 0.625rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: color-mix(in srgb, var(--color-charcoal) 70%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-sage) 15%, transparent);
+  background: white;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.admin-page-btn:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--color-sage) 8%, white);
+  border-color: color-mix(in srgb, var(--color-sage) 30%, transparent);
+}
+
+.admin-page-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.admin-page-btn-active {
+  background: var(--color-sage-dark);
+  border-color: var(--color-sage-dark);
+  color: var(--color-cream);
+}
+
+.admin-page-btn-active:hover {
+  background: var(--color-sage-dark);
+  color: var(--color-cream);
 }

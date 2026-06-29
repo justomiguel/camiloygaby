@@ -1,11 +1,17 @@
 "use client";
 
 import Image from "next/image";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
+import type { SiteContent } from "@/lib/content/types";
+import { HeroPetals } from "./HeroPetals";
+import { Magnetic } from "./Magnetic";
 
-export function Hero() {
+type HeroContent = SiteContent["hero"];
+
+export function Hero({ content }: { content: HeroContent }) {
   const ref = useRef<HTMLElement>(null);
+  const reduce = useReducedMotion();
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start start", "end start"],
@@ -19,19 +25,35 @@ export function Hero() {
     <section
       ref={ref}
       id="inicio"
-      aria-label="Invitación a la boda de Gabriela y Juan Camilo"
+      aria-label={`Invitación a la boda de ${content.name1} y ${content.name2}`}
       className="relative h-[100svh] min-h-[640px] w-full overflow-hidden bg-charcoal"
     >
       <motion.div style={{ y: imageY, scale: imageScale }} className="absolute inset-0">
-        <Image
-          src="/fotos/pareja-arbol.jpg"
-          alt="Gabriela y Juan Camilo bajo un árbol"
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover object-[50%_22%]"
-        />
+        <motion.div
+          className="absolute inset-0"
+          animate={
+            reduce
+              ? undefined
+              : { scale: [1, 1.12], x: ["0%", "-2.5%"], y: ["0%", "2%"] }
+          }
+          transition={
+            reduce
+              ? undefined
+              : { duration: 22, repeat: Infinity, repeatType: "reverse", ease: "easeInOut" }
+          }
+        >
+          <Image
+            src="/fotos/pareja-arbol.jpg"
+            alt={`${content.name1} y ${content.name2} bajo un árbol`}
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover object-[50%_22%]"
+          />
+        </motion.div>
       </motion.div>
+
+      <HeroPetals />
 
       <div className="hero-overlay-top pointer-events-none absolute inset-x-0 top-0 z-[1] h-32 md:h-40" />
       <div className="hero-overlay-bottom pointer-events-none absolute inset-x-0 bottom-0 z-[1] h-3/5" />
@@ -46,7 +68,7 @@ export function Hero() {
           transition={{ delay: 0.4, duration: 1 }}
           className="text-[11px] uppercase tracking-[0.5em] text-gold-light/95 sm:text-xs md:text-sm"
         >
-          19 · Diciembre · 2026
+          {content.dateLine}
         </motion.p>
 
         <motion.h1
@@ -55,14 +77,14 @@ export function Hero() {
           transition={{ delay: 0.65, duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
           className="mt-3 font-display text-cream drop-shadow-[0_2px_18px_rgba(0,0,0,0.55)]"
         >
-          <span className="block text-[26vw] leading-[0.9] sm:text-[8rem] md:text-[11rem] lg:text-[14rem]">
-            Gabriela
+          <span className="block text-[24vw] leading-[1] sm:text-[7rem] md:text-[9.5rem] lg:text-[12rem]">
+            {content.name1}
           </span>
-          <span className="-mt-3 block font-script text-[16vw] leading-[0.9] text-gold-light drop-shadow-[0_3px_12px_rgba(0,0,0,0.45)] sm:text-[5rem] md:text-[7rem] lg:text-[9rem] md:-mt-6">
+          <span className="-mt-2 block font-script text-[15vw] leading-[1] text-gold-light drop-shadow-[0_3px_12px_rgba(0,0,0,0.45)] sm:text-[4.5rem] md:text-[6rem] lg:text-[7.5rem] md:-mt-4">
             &amp;
           </span>
-          <span className="-mt-2 block text-[26vw] leading-[0.9] sm:text-[8rem] md:text-[11rem] lg:text-[14rem]">
-            Juan Camilo
+          <span className="-mt-2 block text-[24vw] leading-[1] sm:text-[7rem] md:text-[9.5rem] lg:text-[12rem]">
+            {content.name2}
           </span>
         </motion.h1>
 
@@ -72,7 +94,7 @@ export function Hero() {
           transition={{ delay: 1.2, duration: 1 }}
           className="mt-6 font-serif text-xl italic text-cream/95 md:text-2xl"
         >
-          ¡Nos casamos!
+          {content.tagline}
         </motion.p>
 
         <motion.div
@@ -81,12 +103,14 @@ export function Hero() {
           transition={{ delay: 1.5, duration: 0.9 }}
           className="mt-8 flex items-center justify-center"
         >
-          <a
-            href="#confirmacion"
-            className="rounded-full border border-cream/50 bg-cream/15 px-7 py-3 text-sm font-medium tracking-wide text-cream backdrop-blur-md transition hover:border-cream hover:bg-cream/25 focus-visible:outline-cream"
-          >
-            Confirmar asistencia
-          </a>
+          <Magnetic strength={0.4}>
+            <a
+              href="#confirmacion"
+              className="inline-block rounded-full border border-cream/50 bg-cream/15 px-7 py-3 text-sm font-medium tracking-wide text-cream backdrop-blur-md transition hover:border-cream hover:bg-cream/25 focus-visible:outline-cream"
+            >
+              {content.ctaText}
+            </a>
+          </Magnetic>
         </motion.div>
 
         <motion.div

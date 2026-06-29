@@ -19,8 +19,7 @@ Landing page de invitación al matrimonio de Gabriela y Juan Camilo. 19 de dicie
 | Cuenta regresiva animada | `Countdown.tsx` | — |
 | Nuestra historia | `Story.tsx` | `mendoza.jpg` |
 | Los protagonistas | `Couple.tsx` | `gabriela-retrato.jpg` + `juancamilo-retrato.png` |
-| Nuestra música | `Music.tsx` | `gabriela-cantando.jpg` + `juancamilo-guitarra.jpg` |
-| Galería de momentos | `Gallery.tsx` | `infancia.jpg`, `viaje-palmeras.jpg`, `pareja-arbol.jpg` |
+| Galería de momentos | `Gallery.tsx` | `infancia.jpg`, `mendoza.jpg`, `20220730_115536.jpg`, `20220806_115518.jpg`, `20220919_135242.jpg`, `IMG_20221023_131056_285.jpg`, `viaje-palmeras.jpg`, `pareja-arbol.jpg` |
 | Lugar y horario | `Details.tsx` | — |
 | Mapa Google Maps | `MapSection.tsx` | — |
 | Dress Code | `DressCode.tsx` | — |

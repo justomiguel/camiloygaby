@@ -4,56 +4,14 @@ import Image from "next/image";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import type { SiteContent } from "@/lib/content/types";
 import { FadeIn } from "./motion";
 import { SectionDivider } from "./SectionDivider";
 
-type Photo = {
-  src: string;
-  alt: string;
-  caption: string;
-  subcaption: string;
-};
+type GalleryContent = SiteContent["gallery"];
 
-const photos: Photo[] = [
-  {
-    src: "/fotos/infancia.jpg",
-    alt: "Gabriela y Juan Camilo cuando eran pequeños",
-    caption: "Antes de saber",
-    subcaption: "Cada uno cargando un sueño que aún no se conocía.",
-  },
-  {
-    src: "/fotos/mendoza.jpg",
-    alt: "Gabriela y Juan Camilo en Mendoza, Argentina",
-    caption: "Mendoza · 2022",
-    subcaption: "Nuestro primer viaje juntos cruzando la cordillera.",
-  },
-  {
-    src: "/fotos/viaje-palmeras.jpg",
-    alt: "Gabriela y Juan Camilo entre palmeras",
-    caption: "Viajando juntos",
-    subcaption: "Persiguiendo el verano y los buenos recuerdos.",
-  },
-  {
-    src: "/fotos/gabriela-cantando.jpg",
-    alt: "Gabriela cantando en escenario",
-    caption: "Gabriela en escena",
-    subcaption: "La música nos unió, y nos sigue uniendo.",
-  },
-  {
-    src: "/fotos/juancamilo-guitarra.jpg",
-    alt: "Juan Camilo tocando la guitarra en una banda",
-    caption: "Juan Camilo en escena",
-    subcaption: "Cada acorde es una pequeña promesa.",
-  },
-  {
-    src: "/fotos/pareja-arbol.jpg",
-    alt: "Gabriela y Juan Camilo bajo un árbol",
-    caption: "Hoy",
-    subcaption: "Listos para dar el gran paso.",
-  },
-];
-
-export function Gallery() {
+export function Gallery({ content }: { content: GalleryContent }) {
+  const photos = content.photos;
   const autoplay = useMemo(
     () => Autoplay({ delay: 4500, stopOnInteraction: false, stopOnMouseEnter: true }),
     [],
@@ -116,14 +74,16 @@ export function Gallery() {
       <div className="mx-auto max-w-6xl">
         <FadeIn className="text-center">
           <p className="text-xs font-medium uppercase tracking-[0.4em] text-sage-dark">
-            Momentos
+            {content.eyebrow}
           </p>
           <SectionDivider variant="leaf" className="mt-3" />
           <h2 className="mt-2 font-serif text-4xl italic leading-[1.1] text-charcoal md:text-5xl">
-            Antes, durante <span className="font-script not-italic text-sage-dark">y</span> siempre
+            {content.title}{" "}
+            <span className="font-script not-italic text-sage-dark">{content.titleAccent}</span>{" "}
+            siempre
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-charcoal/75 md:text-lg">
-            Pequeños recuerdos que nos llevaron a este día.
+            {content.description}
           </p>
           <p className="sr-only" aria-live="polite">
             Foto {selectedIndex + 1} de {photos.length}: {photos[selectedIndex]?.caption}
@@ -141,7 +101,7 @@ export function Gallery() {
               <div className="flex">
                 {photos.map((photo, idx) => (
                   <div
-                    key={photo.src}
+                    key={`${photo.src}-${idx}`}
                     role="group"
                     aria-roledescription="slide"
                     aria-label={`${idx + 1} de ${photos.length}`}
