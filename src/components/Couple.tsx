@@ -31,7 +31,7 @@ export function Couple({ content }: { content: CoupleContent }) {
           {content.people.map((person) => (
             <StaggerItem key={person.name}>
               <article className="group relative overflow-hidden rounded-3xl bg-cream shadow-lg ring-1 ring-charcoal/5 transition hover:-translate-y-1 hover:shadow-xl">
-                <MaskReveal className="relative aspect-[4/5] w-full overflow-hidden">
+                <MaskReveal inherit className="relative aspect-[4/5] w-full overflow-hidden">
                   <ParallaxImage
                     src={person.photo}
                     alt={`Retrato de ${person.name}`}

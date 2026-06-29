@@ -141,11 +141,18 @@ export function MaskReveal({
   className,
   delay = 0,
   direction = "up",
+  inherit = false,
 }: {
   children: ReactNode;
   className?: string;
   delay?: number;
   direction?: "up" | "left";
+  /**
+   * Si está dentro de un padre con variants (p. ej. StaggerChildren), hereda
+   * su estado hidden/show en lugar de usar su propio whileInView, que no se
+   * dispara de forma fiable cuando está anidado.
+   */
+  inherit?: boolean;
 }) {
   const reduce = useReducedMotion();
   const hiddenClip =
@@ -157,17 +164,27 @@ export function MaskReveal({
     return <div className={className}>{children}</div>;
   }
 
+  const variants = {
+    hidden: { clipPath: hiddenClip, scale: 1.06 },
+    show: {
+      clipPath: "inset(0 0 0 0)",
+      scale: 1,
+      transition: { duration: 1.1, delay, ease: EASE },
+    },
+  };
+
+  if (inherit) {
+    return (
+      <motion.div className={className} variants={variants}>
+        {children}
+      </motion.div>
+    );
+  }
+
   return (
     <motion.div
       className={className}
-      variants={{
-        hidden: { clipPath: hiddenClip, scale: 1.06 },
-        show: {
-          clipPath: "inset(0 0 0 0)",
-          scale: 1,
-          transition: { duration: 1.1, delay, ease: EASE },
-        },
-      }}
+      variants={variants}
       initial="hidden"
       whileInView="show"
       viewport={{ once: true, margin: "-60px" }}

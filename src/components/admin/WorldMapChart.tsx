@@ -34,15 +34,8 @@ export function WorldMapChart({ countries }: Props) {
         borderColor="#d8e0d2"
         containerClassName="w-full"
         richInteraction
-        // Configuraciones para mostrar todos los países
         frame={false}
         frameColor="#d8e0d2"
-        // Color por defecto para países sin datos
-        defaultCountryColor="#e6ebe1"
-        // Mostrar tooltip incluso para países sin datos
-        showTooltip={true}
-        // Opacidad del borde de países
-        borderOpacity={0.2}
       />
       <div className="mt-3 flex flex-wrap items-center justify-between gap-2 px-2 pb-2 text-xs text-charcoal/60">
         <span>Intensidad según cantidad de visitas</span>
