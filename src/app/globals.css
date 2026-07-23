@@ -387,6 +387,19 @@ body {
   border: 1px solid color-mix(in srgb, var(--color-gold) 30%, transparent);
 }
 
+/* Intro — sobre cinematográfico */
+.intro-scene-glow {
+  background: radial-gradient(
+    circle at 50% 42%,
+    rgba(184, 146, 79, 0.22) 0%,
+    transparent 58%
+  );
+}
+
+.intro-envelope {
+  transform-style: preserve-3d;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
